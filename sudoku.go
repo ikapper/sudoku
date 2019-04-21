@@ -31,22 +31,30 @@ func main() {
 	fmt.Scanf("%s", &n)
 	numberstr := strings.Split(n, "")
 
-	for i, ch := range numberstr {
+	if len(numberstr) != N*N {
+		fmt.Println("Inputted numbers' length must be 81.")
+		return
+	}
+
+	board.init(numberstr)
+
+	board.calcAnswer(0)
+	board.printAnswer()
+}
+
+func (b *Board) init(numstrs []string) {
+	for i, ch := range numstrs {
 		d, err := strconv.ParseInt(ch, 10, 0)
 		if err != nil {
 			panic(err)
 		}
-		// fmt.Printf("No.%v: %v\n", i, d)
-		if d != 0 {
+		if 0 < d && d <= 9 {
 			r, c := i/N, i%N
-			board.update(r, c, int(d-1), 1)
-			board.doneCells = append(board.doneCells, i)
-			board.locations[i] = int(d)
+			b.update(r, c, int(d-1), 1)
+			b.doneCells = append(b.doneCells, i)
+			b.locations[i] = int(d)
 		}
 	}
-
-	board.calcAnswer(0)
-	board.printAnswer()
 }
 
 func (b *Board) printAnswer() {
