@@ -62,8 +62,16 @@ func (b *Board) init(numstrs []string) error {
 
 func (b *Board) printAnswer() {
 	for r := 0; r < N; r++ {
-		slice := b.locations[r*N : r*N+N]
-		fmt.Println(slice)
+		if r > 0 && r%3 == 0 {
+			fmt.Println("---+---+---")
+		}
+		for c := 0; c < N; c++ {
+			if c > 0 && c%3 == 0 {
+				fmt.Print("|")
+			}
+			fmt.Print(b.locations[r*N+c])
+		}
+		fmt.Println()
 	}
 }
 
