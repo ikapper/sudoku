@@ -31,18 +31,20 @@ func main() {
 	fmt.Scanf("%s", &n)
 	numberstr := strings.Split(n, "")
 
-	if len(numberstr) != N*N {
-		fmt.Println("Inputted numbers' length must be 81.")
+	err := board.init(numberstr)
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
-
-	board.init(numberstr)
 
 	board.calcAnswer(0)
 	board.printAnswer()
 }
 
-func (b *Board) init(numstrs []string) {
+func (b *Board) init(numstrs []string) error {
+	if len(numstrs) != N*N {
+		return fmt.Errorf("Inputted numbers' length must be 81.")
+	}
 	for i, ch := range numstrs {
 		d, err := strconv.ParseInt(ch, 10, 0)
 		if err != nil {
@@ -55,6 +57,7 @@ func (b *Board) init(numstrs []string) {
 			b.locations[i] = int(d)
 		}
 	}
+	return nil
 }
 
 func (b *Board) printAnswer() {
