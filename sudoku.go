@@ -43,7 +43,7 @@ func main() {
 
 func (b *Board) init(numstrs []string) error {
 	if len(numstrs) != N*N {
-		return fmt.Errorf("Inputted numbers' length must be 81.")
+		return fmt.Errorf("Inputted numbers' length must be 81")
 	}
 	for i, ch := range numstrs {
 		d, err := strconv.ParseInt(ch, 10, 0)
