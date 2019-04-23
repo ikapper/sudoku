@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"io/ioutil"
 	"log"
 	"strconv"
@@ -9,6 +10,8 @@ import (
 )
 
 func TestSudoku(t *testing.T) {
+	buf := &bytes.Buffer{}
+	out = buf
 	b := &Board{}
 	content, err := ioutil.ReadFile("input01.txt")
 	if err != nil {
@@ -46,5 +49,46 @@ func TestSudoku(t *testing.T) {
 	ans := builder.String()
 	if expectedAnsStr != ans {
 		t.Errorf("Incorrect answer; expected: %v, but %v", expectedAnsStr, ans)
+	}
+
+	// Check printed format string
+	ansFContent, err := ioutil.ReadFile("answer01f.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	expectedAnsFStr := string(ansFContent)
+	b.printAnswer()
+	ans = buf.String()
+	if expectedAnsFStr != ans {
+		t.Errorf("Incorrect answer format")
+	}
+}
+
+func TestErrorInit(t *testing.T) {
+	b := &Board{}
+	err := b.init([]string{"1", "2"})
+	if err == nil {
+		t.Errorf("Init must be failed")
+	}
+}
+
+func TestMainFunc(t *testing.T) {
+	inContent, err := ioutil.ReadFile("input03.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	in = strings.NewReader(string(inContent))
+	buf := &bytes.Buffer{}
+	out = buf
+	main()
+
+	ansContent, err := ioutil.ReadFile("answer03f.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	expectedAns := string(ansContent)
+	gotAns := buf.String()
+	if expectedAns != gotAns {
+		t.Errorf("Failed to solve")
 	}
 }
