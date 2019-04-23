@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -9,6 +11,11 @@ import (
 const (
 	// N is the number of a side.
 	N = 9
+)
+
+var (
+	out io.Writer = os.Stdout
+	in  io.Reader = os.Stdin
 )
 
 // Board is board of sudoku
@@ -28,12 +35,12 @@ func main() {
 	board := &Board{}
 
 	var n string
-	fmt.Scanf("%s", &n)
+	fmt.Fscanf(in, "%s", &n)
 	numberstr := strings.Split(n, "")
 
 	err := board.init(numberstr)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Fprintln(out, err)
 		return
 	}
 
@@ -63,15 +70,15 @@ func (b *Board) init(numstrs []string) error {
 func (b *Board) printAnswer() {
 	for r := 0; r < N; r++ {
 		if r > 0 && r%3 == 0 {
-			fmt.Println("---+---+---")
+			fmt.Fprintln(out, "---+---+---")
 		}
 		for c := 0; c < N; c++ {
 			if c > 0 && c%3 == 0 {
-				fmt.Print("|")
+				fmt.Fprint(out, "|")
 			}
-			fmt.Print(b.locations[r*N+c])
+			fmt.Fprint(out, b.locations[r*N+c])
 		}
-		fmt.Println()
+		fmt.Fprintln(out)
 	}
 }
 
