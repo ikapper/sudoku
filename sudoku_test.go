@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"io/ioutil"
 	"log"
 	"strconv"
@@ -90,5 +91,28 @@ func TestMainFunc(t *testing.T) {
 	gotAns := buf.String()
 	if expectedAns != gotAns {
 		t.Errorf("Failed to solve")
+	}
+}
+
+func TestFlattenOutput(t *testing.T) {
+	inContent, err := ioutil.ReadFile("input01.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	in = strings.NewReader(string(inContent))
+	buf := &bytes.Buffer{}
+	out = buf
+
+	flag.Set("flatten", "true")
+	main()
+
+	ansContent, err := ioutil.ReadFile("answer01.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	expectedAns := string(ansContent)
+	gotAns := buf.String()
+	if expectedAns != gotAns {
+		t.Errorf("Wrong format, expected: %v, got: %v", expectedAns, gotAns)
 	}
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -14,8 +15,9 @@ const (
 )
 
 var (
-	out io.Writer = os.Stdout
-	in  io.Reader = os.Stdin
+	out       io.Writer = os.Stdout
+	in        io.Reader = os.Stdin
+	toFlatten           = flag.Bool("flatten", false, "whether to flatten output value")
 )
 
 // Board is board of sudoku
@@ -32,6 +34,7 @@ type cell struct {
 }
 
 func main() {
+	flag.Parse()
 	board := &Board{}
 
 	var n string
@@ -68,17 +71,23 @@ func (b *Board) init(numstrs []string) error {
 }
 
 func (b *Board) printAnswer() {
-	for r := 0; r < N; r++ {
-		if r > 0 && r%3 == 0 {
-			fmt.Fprintln(out, "---+---+---")
-		}
-		for c := 0; c < N; c++ {
-			if c > 0 && c%3 == 0 {
-				fmt.Fprint(out, "|")
+	if *toFlatten == false {
+		for r := 0; r < N; r++ {
+			if r > 0 && r%3 == 0 {
+				fmt.Fprintln(out, "---+---+---")
 			}
-			fmt.Fprint(out, b.locations[r*N+c])
+			for c := 0; c < N; c++ {
+				if c > 0 && c%3 == 0 {
+					fmt.Fprint(out, "|")
+				}
+				fmt.Fprint(out, b.locations[r*N+c])
+			}
+			fmt.Fprintln(out)
 		}
-		fmt.Fprintln(out)
+	} else {
+		for i := 0; i < N*N; i++ {
+			fmt.Fprintf(out, "%v", b.locations[i])
+		}
 	}
 }
 
